@@ -12,7 +12,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	catImages, err := apiClient.GetAsset("10")
+	catImages, err := apiClient.GetAsset("10", "live_c1vDY98eMovuABHvsqTjkgnKRs1qm5vnDatRDMKE7crDh94FMmWopnxgq9Jd8wvd")
 	if err != nil {
 		log.Fatal(err)
 	}

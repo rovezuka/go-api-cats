@@ -18,8 +18,8 @@ func NewClient() (*Client, error) {
 	}, nil
 }
 
-func (c Client) GetAsset(quantity string) ([]Asset, error) {
-	url := fmt.Sprintf("https://api.thecatapi.com/v1/images/search?limit=%s", quantity)
+func (c Client) GetAsset(quantity string, apiKey string) ([]Asset, error) {
+	url := fmt.Sprintf("https://api.thecatapi.com/v1/images/search?limit=%s&%s", quantity, apiKey)
 	resp, err := c.client.Get(url)
 
 	if err != nil {
