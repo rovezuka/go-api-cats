@@ -6,6 +6,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/go-resty/resty/v2"
 )
 
 type Client struct {
@@ -14,13 +16,39 @@ type Client struct {
 
 func NewClient() (*Client, error) {
 	return &Client{
-		client: http.DefaultClient,
+		client: http.DefaultClient, // Создание нового клиента с использованием стандартного HTTP-клиента
 	}, nil
+}
+
+func (c Client) PostAsset(file, url, apiKey string) error {
+	// Создайте клиент Resty
+	client := resty.New()
+
+	// Установите заголовок x-api-key
+	client.SetHeader("x-api-key", apiKey)
+
+	// Загружаем изображение и другие параметры
+	resp, err := client.R().
+		SetFile("file", file). // Устанавливаем файл для загрузки
+		SetFormData(map[string]string{
+			"sub_id": "my-user-1", // Устанавливаем форм-данные
+		}).
+		Post(url) // Выполняем HTTP POST-запрос
+
+	if err != nil {
+		return err
+	}
+
+	// Вывод ответа на экран
+	fmt.Println("Response from the server:", resp.String())
+
+	return nil
 }
 
 func (c Client) GetAsset(quantity string, apiKey string) ([]Asset, error) {
 	url := fmt.Sprintf("https://api.thecatapi.com/v1/images/search?limit=%s&%s", quantity, apiKey)
-	resp, err := c.client.Get(url)
+
+	resp, err := c.client.Get(url) // Выполняем HTTP GET-запрос
 
 	if err != nil {
 		return []Asset{}, err
@@ -42,7 +70,7 @@ func (c Client) GetAsset(quantity string, apiKey string) ([]Asset, error) {
 	}
 
 	var catImages []Asset
-	err = json.Unmarshal(body, &catImages)
+	err = json.Unmarshal(body, &catImages) // Распаковываем JSON-ответ в структуру
 	if err != nil {
 		log.Fatal(err)
 	}
