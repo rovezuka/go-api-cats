@@ -20,7 +20,7 @@ func NewClient() (*Client, error) {
 	}, nil
 }
 
-func (c Client) PostAsset(file, url, apiKey string) error {
+func (c Client) PostAsset(file, url, apiKey string) (string, error) {
 	// Создайте клиент Resty
 	client := resty.New()
 
@@ -36,13 +36,11 @@ func (c Client) PostAsset(file, url, apiKey string) error {
 		Post(url) // Выполняем HTTP POST-запрос
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	// Вывод ответа на экран
-	fmt.Println("Response from the server:", resp.String())
-
-	return nil
+	return resp.String(), nil
 }
 
 func (c Client) GetAsset(quantity string, apiKey string) ([]Asset, error) {

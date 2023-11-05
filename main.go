@@ -28,5 +28,5 @@ func main() {
 	}
 
 	// Выполнение POST-запроса для отправки файла
-	apiClient.PostAsset("FILE_PATH", "POST_URL", API_KEY)
+	fmt.Println(apiClient.PostAsset("FILE_PATH", "POST_URL", API_KEY))
 }
